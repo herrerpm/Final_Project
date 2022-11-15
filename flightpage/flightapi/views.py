@@ -9,5 +9,5 @@ def Prueba(request):
 
 @api_view(["POST"])
 def Prueba(request):
-    print(request.data)
-    return Response({"Mami que flow":"d"})
+    print(request.data['json1'])
+    return Response({"si":"d"})
