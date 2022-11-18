@@ -1,21 +1,38 @@
-from amadeus import Client, ResponseError, Location
+# from amadeus import Client, ResponseError, Location
+#
+# amadeus = Client(
+#     client_id='GoJxdZIivaehEX52UiZVUlGS7Ob0sm6H',
+#     client_secret='tFOeUaHd2sKASvqd'
+# )
+#
+# def get_city_airport_list(data):
+#     result = []
+#     for i, val in enumerate(data):
+#         result.append(data[i]['iataCode']+', '+data[i]['name'])
+#     result = list(dict.fromkeys(result))
+#     return result
+#
+#
+# try:
+#     # response = amadeus.reference_data.locations.get(keyword="GDL", subType=Location.ANY)
+#     response = amadeus.shopping.flight_offers_search.get(
+#         originLocationCode='GDL',
+#         destinationLocationCode='SEA',
+#         departureDate='2022-11-20',
+#         adults=1)
+#
+#     print(response.data[0])
+# except ResponseError as error:
+#     print(error)
 
-amadeus = Client(
-    client_id='GoJxdZIivaehEX52UiZVUlGS7Ob0sm6H',
-    client_secret='tFOeUaHd2sKASvqd'
-)
 
-def get_city_airport_list(data):
-    result = []
-    for i, val in enumerate(data):
-        result.append(data[i]['iataCode']+', '+data[i]['name'])
-    result = list(dict.fromkeys(result))
-    return result
+# Python program to read
+# json file
 
 
-try:
-    response = amadeus.reference_data.locations.get(keyword="GDL", subType=Location.ANY)
-    print(response.data)
-    print(get_city_airport_list(response.data))
-except ResponseError as error:
-    print(error)
+import json
+f = open('testdata.json')
+data = json.load(f)
+for i,x in data.items():
+    print(i,x)
+f.close()
