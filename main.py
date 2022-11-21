@@ -36,3 +36,11 @@ data = json.load(f)
 for i,x in data.items():
     print(i,x)
 f.close()
+print()
+print({
+    'salida':data['itineraries'][0]['segments'][0]['departure']['iataCode'],
+    'llegada':data['itineraries'][0]['segments'][0]['arrival']['iataCode'],
+    'tsalida':data['itineraries'][0]['segments'][0]['departure']['at'].partition('T')[2][:-3:],
+    'tllegada':data['itineraries'][0]['segments'][0]['arrival']['at'].partition('T')[2][:-3:],
+    'precio': data['price']['grandTotal'] + ' ' + data['price']['currency']
+})
