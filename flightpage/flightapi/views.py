@@ -26,12 +26,6 @@ def get_city_airport_list(data):
 
 import json
 
-f = open(r'C:\Users\mherr\Desktop\Final Web Proyect\Final_Project_Backend\testdata.json')
-data = json.load(f)
-# for i, x in data.items():
-#     print(i, x)
-f.close()
-
 
 # print()
 # print({
@@ -99,17 +93,19 @@ def CityHotels(request, city):
     print(offers)
     # offers = [{'type': 'hotel-offers', 'hotel': {'type': 'hotel', 'hotelId': 'FHGDLCC1', 'chainCode': 'FH', 'dupeId': '700070668', 'name': 'FIESTA AMERICANA GRAND GUADALAJARA COUNT', 'cityCode': 'GDL', 'latitude': 20.66622, 'longitude': -103.35181}, 'available': True, 'offers': [{'id': '9O1QWIAEY1', 'checkInDate': '2022-11-30', 'checkOutDate': '2022-12-07', 'rateCode': 'PMT', 'rateFamilyEstimated': {'code': 'PRO', 'type': 'P'}, 'room': {'type': 'A1K', 'typeEstimated': {'category': 'DELUXE_ROOM', 'beds': 1, 'bedType': 'KING'}, 'description': {'text': 'PROMOTIONAL RATE-FREE WIFI\nDELUXE KING', 'lang': 'EN'}}, 'guests': {'adults': 1}, 'price': {'currency': 'USD', 'base': '905.59', 'total': '1077.65', 'taxes': [{'code': 'TOTAL_TAX', 'amount': '172.06', 'currency': 'USD', 'included': False}], 'variations': {'average': {'base': '129.37'}, 'changes': [{'startDate': '2022-11-30', 'endDate': '2022-12-07', 'base': '129.37'}]}}, 'policies': {'guarantee': {'acceptedPayments': {'creditCards': ['AC', 'AX', 'DC', 'SD', 'DS', 'JC', 'CA', 'IK', 'MC', 'NC', 'NM', 'VA', 'VI', 'VN', 'VS'], 'methods': ['CREDIT_CARD']}}, 'paymentType': 'guarantee', 'cancellation': {'numberOfNights': 1, 'amount': '129.37', 'deadline': '2022-11-29T18:00:00-06:00'}}, 'self': 'https://test.api.amadeus.com/v3/shopping/hotel-offers/9O1QWIAEY1'}], 'self': 'https://test.api.amadeus.com/v3/shopping/hotel-offers?hotelIds=FHGDLCC1&adults=1&checkInDate=2022-11-30&checkOutDate=2022-12-07'}]
     return Response({'offers': offers})
+    # return Response({'offers': [0,1,2]})
 
 
 @api_view(["POST"])
 def flight_options(request):
     t = json.loads(request.data['json1'])
+    dat = []
     try:
         response = amadeus.shopping.flight_offers_search.get(
             originLocationCode=t['Salida'],
             destinationLocationCode=t['Llegada'],
             departureDate=t['FechaIda'],
-            adults=1)
+            adults=t['Adultos'])
         t = response.data
         print(t[0])
         dat = []
@@ -249,6 +245,7 @@ class Vuelos(Base_view):
     foreign_models = {'Usuario': User}
     key = "id"
 
+
 class Hoteles(Base_view):
     queryset = Hotel.objects.all()
     serializer_class = SerializerHotel
@@ -263,6 +260,7 @@ def vuelosUsuario(request, user):
     queryset = Vuelo.objects.filter(Usuario__username=user)
     serializer = SerializerVuelo(queryset, many=True)
     return Response(serializer.data)
+
 
 @api_view(["GET"])
 def hotelesUsuario(request, user):
