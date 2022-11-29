@@ -7,4 +7,6 @@ To connect the api to the frontend it is necesary to run the following commands.
 - py -m pipenv install
 - py -m pipenv shell
 - cd flightpage
+- py manage.py makemigrations
+- py manage.py migrate
 - py manage.py runserver
