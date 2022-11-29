@@ -28,11 +28,16 @@ class MyTokenObtainPairView(TokenObtainPairView):
 
 urlpatterns = [
     path('prueba/', views.Prueba),
+    path('cityHotels/<city>', views.CityHotels),
     path('airportcode/', views.airportcode),
     path('flightoptions/', views.flight_options),
     path('users/', views.Users.as_view(), {"pk": None}),
     path('users/<pk>', views.Users.as_view()),
+    path('hoteles/', views.Hoteles.as_view(), {"pk": None}),
+    path('hoteles/<pk>', views.Hoteles.as_view()),
     path('vuelos/', views.Vuelos.as_view(), {"pk": None}),
+    path('vuelos/usuario/<user>', views.vuelosUsuario),
+    path('hoteles/usuario/<user>', views.hotelesUsuario),
     path('vuelos/<pk>', views.Vuelos.as_view()),
     path('api/token/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),

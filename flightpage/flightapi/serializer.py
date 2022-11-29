@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Vuelo
+from .models import Vuelo, Hotel
 from django.contrib.auth.models import User
 
 class SerializerUser(serializers.ModelSerializer):
@@ -14,4 +14,13 @@ class SerializerVuelo(serializers.ModelSerializer):
 
     class Meta:
         model = Vuelo
+        fields = '__all__'
+
+class SerializerHotel(serializers.ModelSerializer):
+    # Carrera = serializers.StringRelatedField(read_only=True)
+    # Asesor = serializers.StringRelatedField(read_only=True)
+    Usuario = SerializerUser()
+
+    class Meta:
+        model = Hotel
         fields = '__all__'

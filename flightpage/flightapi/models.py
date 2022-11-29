@@ -17,3 +17,11 @@ class Vuelo(models.Model):
     Tiempo_llegada = models.DateTimeField()
     Maletas = models.PositiveSmallIntegerField()
     Asiento = models.CharField(max_length=5)
+
+
+class Hotel(models.Model):
+    Usuario = models.ForeignKey(User, on_delete=models.CASCADE)
+    Nombre = models.CharField(max_length=100)
+    Llegada = models.DateField()
+    Salida = models.DateField()
+    Descripcion = models.CharField(max_length=100)

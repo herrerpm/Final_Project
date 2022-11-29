@@ -4,8 +4,8 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from amadeus import Client, ResponseError, Location
 from rest_framework import generics
-from .models import Vuelo
-from .serializer import SerializerVuelo, SerializerUser
+from .models import Vuelo, Hotel
+from .serializer import SerializerVuelo, SerializerUser, SerializerHotel
 from django.contrib.auth import get_user_model
 
 from django.contrib.auth.models import User
@@ -56,6 +56,51 @@ def Prueba(request):
     return Response({"si": "d"})
 
 
+# @api_view(["GET"])
+# def CityHotels(request, city):
+#     hoteles = []
+#     offers = []
+#     print('t')
+#     try:
+#         response = amadeus.reference_data.locations.hotels.by_city.get(cityCode=city)
+#         for i in response.data:
+#             hoteles.append(i['hotelId'])
+#     except ResponseError as error:
+#         pass
+#     for x in hoteles[0:5:]:
+#         try:
+#             response = amadeus.shopping.hotel_offers_search.get(hotelIds=x, adults='2')
+#             if response.data:
+#                 offers.append(response.data[0])
+#         except ResponseError as error:
+#             pass
+#     print(offers)
+#     return Response({'offers': offers})
+
+@api_view(["POST"])
+def CityHotels(request, city):
+    print(request.data)
+    hoteles = []
+    offers = []
+    print('t')
+    try:
+        response = amadeus.reference_data.locations.hotels.by_city.get(cityCode=city)
+        for i in response.data:
+            hoteles.append(i['hotelId'])
+    except ResponseError as error:
+        pass
+    for x in hoteles:
+        try:
+            response = amadeus.shopping.hotel_offers_search.get(hotelIds=x, **request.data)
+            if response.data:
+                offers.append(response.data[0])
+        except ResponseError as error:
+            pass
+    print(offers)
+    # offers = [{'type': 'hotel-offers', 'hotel': {'type': 'hotel', 'hotelId': 'FHGDLCC1', 'chainCode': 'FH', 'dupeId': '700070668', 'name': 'FIESTA AMERICANA GRAND GUADALAJARA COUNT', 'cityCode': 'GDL', 'latitude': 20.66622, 'longitude': -103.35181}, 'available': True, 'offers': [{'id': '9O1QWIAEY1', 'checkInDate': '2022-11-30', 'checkOutDate': '2022-12-07', 'rateCode': 'PMT', 'rateFamilyEstimated': {'code': 'PRO', 'type': 'P'}, 'room': {'type': 'A1K', 'typeEstimated': {'category': 'DELUXE_ROOM', 'beds': 1, 'bedType': 'KING'}, 'description': {'text': 'PROMOTIONAL RATE-FREE WIFI\nDELUXE KING', 'lang': 'EN'}}, 'guests': {'adults': 1}, 'price': {'currency': 'USD', 'base': '905.59', 'total': '1077.65', 'taxes': [{'code': 'TOTAL_TAX', 'amount': '172.06', 'currency': 'USD', 'included': False}], 'variations': {'average': {'base': '129.37'}, 'changes': [{'startDate': '2022-11-30', 'endDate': '2022-12-07', 'base': '129.37'}]}}, 'policies': {'guarantee': {'acceptedPayments': {'creditCards': ['AC', 'AX', 'DC', 'SD', 'DS', 'JC', 'CA', 'IK', 'MC', 'NC', 'NM', 'VA', 'VI', 'VN', 'VS'], 'methods': ['CREDIT_CARD']}}, 'paymentType': 'guarantee', 'cancellation': {'numberOfNights': 1, 'amount': '129.37', 'deadline': '2022-11-29T18:00:00-06:00'}}, 'self': 'https://test.api.amadeus.com/v3/shopping/hotel-offers/9O1QWIAEY1'}], 'self': 'https://test.api.amadeus.com/v3/shopping/hotel-offers?hotelIds=FHGDLCC1&adults=1&checkInDate=2022-11-30&checkOutDate=2022-12-07'}]
+    return Response({'offers': offers})
+
+
 @api_view(["POST"])
 def flight_options(request):
     t = json.loads(request.data['json1'])
@@ -72,6 +117,8 @@ def flight_options(request):
             dat.append({
                 'salida': i['itineraries'][0]['segments'][0]['departure']['iataCode'],
                 'llegada': i['itineraries'][0]['segments'][-1]['arrival']['iataCode'],
+                'fsalida': i['itineraries'][0]['segments'][0]['departure']['at'].partition('T')[0],
+                'fllegada': i['itineraries'][0]['segments'][0]['departure']['at'].partition('T')[0],
                 'tsalida': i['itineraries'][0]['segments'][0]['departure']['at'].partition('T')[2][:-3:],
                 'tllegada': i['itineraries'][0]['segments'][-1]['arrival']['at'].partition('T')[2][:-3:],
                 'precio': i['price']['grandTotal'] + ' ' + i['price']['currency']
@@ -145,9 +192,6 @@ class Base_view(generics.GenericAPIView):
         return Response(self.serializer_class(objectp).data)
 
 
-
-
-
 class Users(Base_view):
     queryset = get_user_model().objects.all()
     serializer_class = SerializerUser
@@ -157,6 +201,7 @@ class Users(Base_view):
     key = "username"
 
     def post(self, request, pk):
+        print('request.data')
         instance = {}
         for i in request.data:
             field = i
@@ -199,7 +244,28 @@ class Users(Base_view):
 class Vuelos(Base_view):
     queryset = Vuelo.objects.all()
     serializer_class = SerializerVuelo
-    model = User
-    foreign_keys = {'Usuario':'Correo'}
-    foreign_models = {'Usuario':User}
+    model = Vuelo
+    foreign_keys = {'Usuario': 'username'}
+    foreign_models = {'Usuario': User}
     key = "id"
+
+class Hoteles(Base_view):
+    queryset = Hotel.objects.all()
+    serializer_class = SerializerHotel
+    model = Hotel
+    foreign_keys = {'Usuario': 'username'}
+    foreign_models = {'Usuario': User}
+    key = "id"
+
+
+@api_view(["GET"])
+def vuelosUsuario(request, user):
+    queryset = Vuelo.objects.filter(Usuario__username=user)
+    serializer = SerializerVuelo(queryset, many=True)
+    return Response(serializer.data)
+
+@api_view(["GET"])
+def hotelesUsuario(request, user):
+    queryset = Hotel.objects.filter(Usuario__username=user)
+    serializer = SerializerHotel(queryset, many=True)
+    return Response(serializer.data)
