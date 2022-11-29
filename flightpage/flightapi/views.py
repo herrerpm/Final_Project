@@ -197,7 +197,8 @@ class Users(Base_view):
     key = "username"
 
     def post(self, request, pk):
-        print('request.data')
+        # print('request.data')
+        # print(request.data)
         instance = {}
         for i in request.data:
             field = i
@@ -209,6 +210,7 @@ class Users(Base_view):
                     return Response({field: f" {request.data[field]} Not found"}, status=status.HTTP_404_NOT_FOUND)
             else:
                 instance[field] = request.data[i]
+        # print(instance)
         new_object = User.objects.create_user(*instance.values())
         new_object.save()
         return Response(self.serializer_class(new_object).data)
