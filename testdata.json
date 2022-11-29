@@ -1,0 +1,91 @@
+{
+    "type": "flight-offer",
+    "id": "1",
+    "source": "GDS",
+    "instantTicketingRequired": "False",
+    "nonHomogeneous": "False",
+    "oneWay": "False",
+    "lastTicketingDate": "2022-11-17",
+    "numberOfBookableSeats": 3,
+    "itineraries": [
+        {
+            "duration": "PT7H37M",
+            "segments": [
+                {
+                    "departure": {
+                        "iataCode": "GDL",
+                        "terminal": "1",
+                        "at": "2022-11-20T14:30:00"
+                    },
+                    "arrival": {
+                        "iataCode": "SJC",
+                        "terminal": "B",
+                        "at": "2022-11-20T16:30:00"
+                    },
+                    "carrierCode": "AS",
+                    "number": "235",
+                    "aircraft": {"code": "73J"},
+                    "operating": {"carrierCode": "AS"},
+                    "duration": "PT4H",
+                    "id": "152",
+                    "numberOfStops": 0,
+                    "blacklistedInEU": "False"
+                },
+                {
+                    "departure": {
+                        "iataCode": "SJC",
+                        "terminal": "B",
+                        "at": "2022-11-20T17:55:00"
+                    },
+                    "arrival": {"iataCode": "SEA", "at": "2022-11-20T20:07:00"},
+                    "carrierCode": "AS",
+                    "number": "854",
+                    "aircraft": {"code": "73J"},
+                    "operating": {"carrierCode": "AS"},
+                    "duration": "PT2H12M",
+                    "id": "153",
+                    "numberOfStops": 0,
+                    "blacklistedInEU": "False"
+                }
+            ]
+        }
+    ],
+    "price": {
+        "currency": "EUR",
+        "total": "216.70",
+        "base": "106.00",
+        "fees": [
+            {"amount": "0.00", "type": "SUPPLIER"},
+            {"amount": "0.00", "type": "TICKETING"}
+        ],
+        "grandTotal": "216.70"
+    },
+    "pricingOptions": {"fareType": ["PUBLISHED"], "includedCheckedBagsOnly": "False"},
+    "validatingAirlineCodes": ["AS"],
+    "travelerPricings": [
+        {
+            "travelerId": "1",
+            "fareOption": "STANDARD",
+            "travelerType": "ADULT",
+            "price": {"currency": "EUR", "total": "216.70", "base": "106.00"},
+            "fareDetailsBySegment": [
+                {
+                    "segmentId": "152",
+                    "cabin": "ECONOMY",
+                    "fareBasis": "GH3OAJBN",
+                    "brandedFare": "SV",
+                    "class": "X",
+                    "includedCheckedBags": {"quantity": 0}
+                },
+                {
+                    "segmentId": "153",
+                    "cabin": "ECONOMY",
+                    "fareBasis": "GH3OAJBN",
+                    "brandedFare": "SV",
+                    "class": "X",
+                    "includedCheckedBags": {"quantity": 0}
+                }
+            ]
+        }
+    ]
+}
